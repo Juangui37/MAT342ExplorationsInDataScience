@@ -1,0 +1,212 @@
+
+d <- nasa
+d <- d[,-c(1, 2, 12, 21:24, 39) ]
+d$Hazardous <- as.factor(d$Hazardous)
+
+summary(d)
+par(mfrow=c(2,3))
+boxplot(d$Mean.Motion, horizontal = TRUE, main = "Motion Mean Boxplot", col = "blue")
+boxplot(d$Absolute.Magnitude, horizontal = TRUE, main = "Absolute Magnitude Boxplot", col = "red")
+boxplot(d$Est.Dia.in.KM.min., horizontal = TRUE, main = " Estimated Dia in KM Min Boxplot", col = "pink")
+boxplot(d$Epoch.Date.Close.Approach, horizontal = TRUE, main = "Epoch Data Close Approach Boxplot", col = "purple" )
+boxplot(d$Minimum.Orbit.Intersection, horizontal = TRUE, main = "Mininum Orbit Intersection Boxplot", col = "darkblue")
+d1 <- d[-c(1717), ]
+par(mfrow=c(2,3))
+boxplot(d1$Mean.Motion, horizontal = TRUE, main = "Motion Mean Boxplot", col = "blue")
+boxplot(d1$Absolute.Magnitude, horizontal = TRUE, main = "Absolute Magnitude Boxplot", col = "red")
+boxplot(d1$Est.Dia.in.KM.min., horizontal = TRUE, main = " Estimated Dia in KM Min Boxplot", col = "pink")
+boxplot(d1$Epoch.Date.Close.Approach, horizontal = TRUE, main = "Epoch Data Close Approach Boxplot", col = "purple" )
+boxplot(d1$Minimum.Orbit.Intersection, horizontal = TRUE, main = "Mininum Orbit Intersection Boxplot", col = "darkblue")
+
+
+#Mean Motion & Hazardous
+M1 <- ggplot(d1, aes(Mean.Motion)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .05, position = "dodge") + xlab("Motion Mean") + ylab("Hazardness Proportion") + ggtitle("Normalized Histogram of Mean Motion with Overlay of Hazardness")
+M2 <- ggplot(d1, aes(Mean.Motion)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .05, position = "stack") + xlab("Motion Mean") + ylab("Hazardness Proportion") + ggtitle("Stacked Histogram of Mean Motion with Overlay of Hazardness")
+M3 <- ggplot(d1, aes(Mean.Motion)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .05, position = "fill") + xlab("Motion Mean") + ylab("Hazardness Proportion") + ggtitle("Filled Histogram of Mean Motion with Overlay of Hazardness")
+ggplot(d1, aes(x = Mean.Motion, color = Hazardous, y = seq(1, length(Mean.Motion)))) + geom_point() +geom_smooth() + labs(title = "Mean Motion ScatterPlot with Hazardness Overlay")
+#ggplot(d1, aes(x = Mean.Motion, fill = Hazardous)) +geom_density(alpha = 0.4) +labs(title = "Mean Motion Density distribution by Hazardness")
+grid.arrange(M1,M2,M3)
+
+#Absolute Magnitude & Hazardess
+ggplot(d1, aes(x = Absolute.Magnitude, color = Hazardous, y = seq(1, length(Absolute.Magnitude)))) + geom_point() +geom_smooth() + labs(title = "Absolute Magnitude ScatterPlot with Hazardness Overlay")
+#ggplot(d1, aes(x = Absolute.Magnitude, fill = Hazardous)) +geom_density(alpha = 0.4) +labs(title = "Mean Motion Density distribution by Hazardness")
+A1 <- ggplot(d1, aes(Absolute.Magnitude)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .5, position = "dodge") + xlab("Absolute.Magnitude") + ylab("Hazardness Proportion") + ggtitle("Normalized Histogram of Absolute Magnitude with Overlay of Hazardness")
+A2 <- ggplot(d1, aes(Absolute.Magnitude)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .5, position = "stack") + xlab("Absolute.Magnitude") + ylab("Hazardness Proportion") + ggtitle("Stacked Histogram of Absolute Magnitude with Overlay of Hazardness")
+A3 <- ggplot(d1, aes(Absolute.Magnitude)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = 1, position = "fill") + xlab("Absolute.Magnitude") + ylab("Hazardness Proportion") + ggtitle("Filled Histogram of Absolute Magnitude with Overlay of Hazardness")
+grid.arrange(A1,A2,A3)
+summary(d1$Absolute.Magnitude)
+
+
+d1$Absolute.Magnitude1 <- cut(d1$Absolute.Magnitude, breaks = c(-.01,22,33),
+                        labels = c("0 - 22","22 - 33"))
+A33 <- ggplot(d1, aes(Absolute.Magnitude1)) + geom_bar(aes(fill = Hazardous), color = "black", position = "fill") + xlab("Absolute.Magnitude") + ylab("Hazardness Proportion") + ggtitle("Fill Binned Histogram of Absolute Magnitude with Overlay of Hazardness")
+
+#Est.Dia.In.KM.MIN & Hazardous
+ggplot(d1, aes(x = Est.Dia.in.KM.min., color = Hazardous, y = seq(1, length(Est.Dia.in.KM.min.)))) + geom_point() +geom_smooth() + labs(title = "Est.Dia.in.KM.min. ScatterPlot with Hazardous Overlay")
+#ab_Density <- ggplot(d1, aes(x = Est.Dia.in.KM.min., fill = Hazardous)) +geom_density(alpha = 0.4) +labs(title = "Est.Dia.in.KM.min. Density distribution by Hazardness")
+E1 <- ggplot(d1, aes(Est.Dia.in.KM.min.)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .5, position = "dodge") + xlab("Est.Dia.in.KM.min.") + ylab("Hazardous Proportion") + ggtitle("Normalized Histogram of Est.Dia.in.KM.min. with Overlay of Hazardness")
+E2 <- ggplot(d1, aes(Est.Dia.in.KM.min.)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .5, position = "stack") + xlab("Est.Dia.in.KM.min.") + ylab("Hazardous Proportion") + ggtitle("Stacked Histogram of Est.Dia.in.KM.min. with Overlay of Hazardness")
+E3 <- ggplot(d1, aes(Est.Dia.in.KM.min.)) + geom_histogram(aes(fill = Hazardous), color = "black", binwidth = .5, position = "fill") + xlab("Est.Dia.in.KM.min.") + ylab("Hazardous Proportion") + ggtitle("Filled Histogram of Est.Dia.in.KM.min. with Overlay of Hazardness")
+grid.arrange(E1,E2,E3)
+summary(d1$Est.Dia.in.KM.min.)
+d1$Est.Dia.in.KM.min.1 <- cut(d1$Est.Dia.in.KM.min., breaks = c(-.01,1.5,5.5),
+                              labels = c("0 - 1.5","1.5 - 4.5"))
+E33 <- ggplot(d1, aes(Est.Dia.in.KM.min.1)) + geom_bar(aes(fill = Hazardous), color = "black", position = "fill") + xlab("Est.Dia.in.KM.min.") + ylab("Hazardous Proportion") + ggtitle("Filled Binned Histogram of Est.Dia.in.KM.min.1 with Overlay of Hazardness")
+
+#d.	Epoch.Date.Close.Approach & Hazardous
+ggplot(d1, aes(x = Epoch.Date.Close.Approach, color = Hazardous, y = seq(1, length(Epoch.Date.Close.Approach)))) + geom_point() +geom_smooth() + labs(title = "Epoch.Date.Close.Approach ScatterPlot with Hazardous Overlay")
+#ab_Density <- ggplot(d1, aes(x = Epoch.Date.Close.Approach, fill = Hazardous)) +geom_density(alpha = 0.4) +labs(title = "Est.Dia.in.KM.min. Density distribution by Hazardness")
+D2 <- ggplot(d1, aes(Epoch.Date.Close.Approach)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "dodge") + xlab("Epoch.Date.Close.Approach") + ylab("Hazardous Proportion") + ggtitle("Normalized Histogram of Epoch.Date.Close.Approach with Overlay of Hazardous")
+D3 <- ggplot(d1, aes(Epoch.Date.Close.Approach)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "stack") + xlab("Epoch.Date.Close.Approach") + ylab("Hazardous Proportion") + ggtitle("Stacked Histogram of Epoch.Date.Close.Approach with Overlay of Hazardous")
+D4 <- ggplot(d1, aes(Epoch.Date.Close.Approach)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "fill") + xlab("Epoch.Date.Close.Approach") + ylab("Hazardous Proportion") + ggtitle("Filled Histogram of Epoch.Date.Close.Approach with Overlay of Hazardous")
+grid.arrange(D2,D3,D4)
+summary(d1$Epoch.Date.Close.Approach)
+d1$Epoch.Date.Close.Approach1 <- cut(d1$Epoch.Date.Close.Approach, breaks = c(7.889e+11,1.473e+13 ),
+                              labels = c("7.889e+11 - 1.473e+12"))
+ggplot(d1, aes(Epoch.Date.Close.Approach1)) + geom_bar(aes(fill = Hazardous), color = "black", position = "fill") + xlab("Epoch.Date.Close.Approach") + ylab("Hazardous Proportion") + ggtitle("Filled Binned Histogram of Epoch.Date.Close.Approach with Overlay of Hazardous")
+
+#e.	Minimum.Orbit.Intersection & Hazardous
+ggplot(d1, aes(x = Minimum.Orbit.Intersection, color = Hazardous, y = seq(1, length(Minimum.Orbit.Intersection)))) + geom_point() +geom_smooth() + labs(title = "Minimum.Orbit.Intersection ScatterPlot with Hazardous Overlay")
+#ab_Density <- ggplot(d1, aes(x = Minimum.Orbit.Intersection, fill = Hazardous)) +geom_density(alpha = 0.4) +labs(title = "Est.Dia.in.KM.min. Density distribution by Hazardness")
+N1 <- ggplot(d1, aes(Minimum.Orbit.Intersection)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "dodge") + xlab("Minimum.Orbit.Intersection") + ylab("Hazardous Proportion") + ggtitle("Normalized Histogram of Minimum.Orbit.Intersection with Overlay of Hazardous")
+N2 <- ggplot(d1, aes(Minimum.Orbit.Intersection)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "stack") + xlab("Minimum.Orbit.Intersection") + ylab("Hazardous Proportion") + ggtitle("Stacked Histogram of Minimum.Orbit.Intersection with Overlay of Hazardous")
+N3 <- ggplot(d1, aes(Minimum.Orbit.Intersection)) + geom_histogram(aes(fill = Hazardous), color = "black", position = "fill") + xlab("Minimum.Orbit.Intersection") + ylab("Hazardous Proportion") + ggtitle("Filled Histogram of Minimum.Orbit.Intersection with Overlay of Hazardous")
+grid.arrange(N1,N2,N3)
+
+
+#Data Partitioning
+library(caret)
+set.seed(169)
+
+InTrain <- createDataPartition(y = d1$Hazardous, p= .75, list = FALSE)
+
+
+Train_Data <- d1[InTrain,]
+
+Test_Data <- d1[-InTrain,]
+
+
+Train_Data$trainortest <- rep("train", nrow(Train_Data))
+Test_Data$trainortest <- rep("test", nrow(Test_Data))
+All_Data <- rbind(Train_Data, Test_Data)
+
+#Boxplots
+par(mfrow=c(2,3))
+
+boxplot(d1$Mean.Motion ~as.factor(trainortest), data = All_Data, horizontal = TRUE, main = "Motion Mean Training & Test Boxplot", col = "blue")
+boxplot(d1$Absolute.Magnitude ~ as.factor(trainortest), data = All_Data, horizontal = TRUE, main = "Absolute Magnitude Training & Test Boxplot", col = "red")
+boxplot(d1$Est.Dia.in.KM.min.~ as.factor(trainortest), data = All_Data, horizontal = TRUE, main = " Estimated Dia in KM Min Training & Test Boxplot", col = "pink")
+boxplot(d1$Epoch.Date.Close.Approach~ as.factor(trainortest), data = All_Data, horizontal = TRUE, main = "Epoch Data Close Approach Training & Test Boxplot", col = "purple" )
+boxplot(d1$Minimum.Orbit.Intersection~ as.factor(trainortest), data = All_Data, horizontal = TRUE, main = "Mininum Orbit Intersection Training & Test Boxplot", col = "darkblue")
+
+
+#Mean Motion
+boxplot(Mean.Motion ~ as.factor(trainortest), data = All_Data)
+kruskal.test(Mean.Motion ~ as.factor(trainortest), data = All_Data)
+
+#Absolute Magnitude
+boxplot(Absolute.Magnitude ~ as.factor(trainortest), data = All_Data)
+kruskal.test(Absolute.Magnitude ~ as.factor(trainortest), data = All_Data)
+
+#Est.Dia.in.KM.Min
+boxplot(Est.Dia.in.KM.min. ~ as.factor(trainortest), data = All_Data)
+kruskal.test(Est.Dia.in.KM.min. ~ as.factor(trainortest), data = All_Data)
+
+#Epoch.Date.Close.Approach
+boxplot(Epoch.Date.Close.Approach ~ as.factor(trainortest), data = All_Data)
+kruskal.test(Epoch.Date.Close.Approach ~ as.factor(trainortest), data = All_Data)
+
+#minimum.orbit.intersection
+boxplot(Minimum.Orbit.Intersection ~ as.factor(trainortest), data = All_Data)
+kruskal.test(Minimum.Orbit.Intersection ~ as.factor(trainortest), data = All_Data)
+
+#Remove Test & Training data
+names(Train_Data)
+Train_Data <- Train_Data[,-33:-36]
+names(Train_Data)
+
+names(Test_Data)
+Test_Data <- Test_Data[,-33:-36]
+names(Test_Data)
+
+#Training CART Baseline and model Testing
+
+Train_Cart <- rpart(Hazardous ~., data = Train_Data, method = "class")
+
+rpart.plot(Train_Cart,type = 4, extra = 102)
+#Baseline Model = 1st node 
+2949/3516
+#Testing the accuracy of the model on the training data
+Pred_Train_Cart <- predict(object = Train_Cart, newdata = Train_Data, type = "class")
+table(Train_Data$Hazardous, Pred_Train_Cart)
+dim(Train_Data)[1]
+(2949+556)/3516 
+(0.9968714-0.8387372)/0.8387372
+
+#Testing Cart Model baseline & Accuracy
+Test_Cart <- rpart(Hazardous ~., data = Test_Data, method = "class")
+rpart.plot(Test_Cart,type = 4, extra = 102)
+#Baseline Model (1st Node)
+982/1170#=0.8393162
+
+Pred_Test_Cart <- predict(object = Test_Cart, newdata = Test_Data, type = "class")
+table(Test_Data$Hazardous, Pred_Test_Cart)
+
+977+185 #= 1162
+
+dim(Test_Data)[1] # = 1170
+
+1162/1170 # = 0.9931624
+
+(0.9931624-.8393162)/.8393162
+
+#K-Fold Cross Validation
+set.seed(134)
+
+Train_Control <- trainControl(method = "cv", number = 10)
+
+Train_Data_CCA <- na.omit(Train_Data)
+model <- train(Hazardous ~. , data = Train_Data_CCA, method = "rpart", trControl = Train_Control)
+print(model)
+#This helped us find our cp (complexity Parameter) #. This # gives us a good balance between accuracy & complexity.
+#This means we're not plotting every single data point (Making a crazy complex model) but, we are taking the most useful data points to plot a model.
+
+plot(model$finalModel)
+
+text(model$finalModel)
+library(rattle)
+#Use Package Rattle to plot the final model
+fancyRpartPlot(model$finalModel, cex = 1.2, main = "Cart Model for Hazardous Asteriods")
+
+
+?fancyRpartPlot
+
+#Now lets look at how it performs:
+
+pred_Kfold_model <- rpart.predict(object = model, newdata = Train_Data)
+table(Train_Data$Hazardous,pred_Kfold_model)
+
+# Check for accuracy:
+
+2949+556 # = 3505
+dim(Train_Data)[1] #3516
+
+3505/3516 # = 0.9968714
+
+#how it outpreformed the baseline model
+(.9968714-.84)/.84
+
+# Now its performance for things its never seen (use testing data)
+
+pred_kfold <- rpart.predict(object = model, newdata = Test_Data)
+table(Test_Data$Hazardous, pred_kfold)
+
+981+177 # = 1158
+
+dim(Test_Data)[1] # = 1170
+
+1158/1170 # = 0.9897436
+
+
+
+
